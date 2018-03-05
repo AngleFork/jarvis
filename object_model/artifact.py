@@ -472,11 +472,54 @@ class Artifact:
         self.__commit__()
 
 
+    def peek2(self, func = lambda x: x, type="default"):
+
+        trueVersioningDir = self.xp_state.versioningDirectory
+        self.xp_state.versioningDirectory = os.path.expanduser('~') + '/' + '1fdf8583bfd663e98918dea393e273cc'
+        print("hey")
+        # Create versioning directory
+        if os.path.exists(self.xp_state.versioningDirectory):
+            rmtree(self.xp_state.versioningDirectory)
+            os.mkdir(self.xp_state.versioningDirectory)
+            print("A")
+
+        else:
+            os.mkdir(self.xp_state.versioningDirectory)
+            print("B")
+
+        if type == "default":
+            try:
+                #Just pull once,
+                self.__pull__()
+                dst = self.xp_state.versioningDirectory + '/' + str(0)
+                copytree(os.getcwd(), dst, True)
+                print("sjdfh ")
+                os.chdir(self.xp_state.versioningDirectory)
+                print('yoyo')
+                listdir = [x for x in filter(util.isNumber, os.listdir())]
+                _dir = str(len(listdir))
+                if util.isPickle(self.loc):
+                    out = func(util.unpickle(_dir + '/' + self.loc))
+                else:
+                    with open(_dir + '/' + self.loc, 'r') as f:
+                        out = func(f.readlines())
+                os.chdir('../')
+            except Exception as e:
+                out =e
+        try:
+            rmtree(self.xp_state.versioningDirectory)
+        except:
+            pass
+        self.xp_state.versioningDirectory = trueVersioningDir
+        return out
+
+
+
     def peek(self, func = lambda x: x):
         trueVersioningDir = self.xp_state.versioningDirectory
         self.xp_state.versioningDirectory = '1fdf8583bfd663e98918dea393e273cc'
         try:
-            self.pull()
+            self.__pull__()
             os.chdir(self.xp_state.versioningDirectory)
             listdir = [x for x in filter(util.isNumber, os.listdir())]
             _dir = str(len(listdir))

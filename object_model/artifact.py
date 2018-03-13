@@ -471,9 +471,7 @@ class Artifact:
 
         self.__commit__()
 
-
-    def peek(self, func = lambda x: x, type="default"):
-
+    def peek(self, func = lambda x: x):
         trueVersioningDir = self.xp_state.versioningDirectory
         self.xp_state.versioningDirectory = os.path.expanduser('~') + '/' + '1fdf8583bfd663e98918dea393e273cc'
 
